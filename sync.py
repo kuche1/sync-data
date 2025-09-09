@@ -23,7 +23,7 @@ def node_symlink(real_file: Path, symlink_to_create: Path) -> None:
         node_delete(symlink_to_create)
 
     print(f'Symlinking `{symlink_to_create}` -> `{real_file}`')
-    symlink_to_create.symlink_to(real_file)
+    symlink_to_create.symlink_to(real_file) # TODO: but what if it is a nested subdirectory ?
 
 def main(config_toml: str) -> None:
     config_toml = Path(config_toml)
@@ -41,13 +41,10 @@ def main(config_toml: str) -> None:
         sync_folder_node = sync_folder / relative_path
         home_folder_node = Path.home() / relative_path
 
-        print(f'{sync_folder_node.exists()}')
-        print(f'{home_folder_node.exists()}')
-
         if sync_folder_node.exists():
             node_symlink(sync_folder_node, home_folder_node)
         else:
-            raise NotImplementedError
+            warnings.warn(f'node does not exist: {sync_folder_node}')
 
 def parse_cmdline() -> None:
     parser = ArgumentParser()
