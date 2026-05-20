@@ -175,6 +175,16 @@ def handle_hosts(config_toml_parent: Path, config: dict) -> None:
 
 
 def main(config_toml: Path) -> None:
+    resolved = config_toml.resolve()
+    if resolved != config_toml:
+        print("Warning:")
+        print("The passed config file:")
+        print(config_toml)
+        print("Is not a resolved path:")
+        print(resolved)
+        print("Press Enter to Continue Without Resolving")
+        input(">")
+
     with config_toml.open("rb") as f:
         config = tomllib.load(f)
 
