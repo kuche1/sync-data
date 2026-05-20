@@ -1,11 +1,12 @@
 #! /usr/bin/env python3
 
-from argparse import ArgumentParser
-import tomllib
-from pathlib import Path
-import warnings
-from datetime import datetime
 import subprocess
+import warnings
+from argparse import ArgumentParser
+from datetime import datetime
+from pathlib import Path
+
+import tomllib
 
 SYSTEM_HOSTS_FILE = Path("/etc/hosts")
 
@@ -22,7 +23,9 @@ def node_delete(node: Path) -> None:
 
 
 def node_symlink(real_file: Path, symlink_to_create: Path) -> None:
-    if symlink_to_create.exists():
+    if (
+        symlink_to_create.exists() or symlink_to_create.is_symlink()
+    ):  # because it seems `.exists()` returns False if the symlink target does not exist
         # if the existing file is a symlink and it points to the right location, leave it as is # TODO: but what if it is a symlink to a symlink ? do they both get resolved ?
         if symlink_to_create.resolve() == real_file:
             return
